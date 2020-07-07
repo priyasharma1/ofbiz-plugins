@@ -85,6 +85,11 @@ under the License.
         <response name="success" type="view-last"/>
         <response name="error" type="view" value="login"/>
     </request-map>
+    <request-map uri="validateAndLogin">
+        <security https="true" auth="false"/>
+        <event type="java" path="org.apache.ofbiz.ecommerce.misc.ThirdPartyEvents" invoke="validateRecaptcha"/>
+        <response name="success" type="request" value="login"/>
+    </request-map>
     <request-map uri="login">
         <security https="true" auth="false"/>
         <event type="java" path="org.apache.ofbiz.securityext.login.LoginEvents" invoke="storeLogin"/>
@@ -982,7 +987,12 @@ under the License.
         <response name="success" type="view" value="main"/>
         <response name="error" type="view" value="newcustomer"/>
     </request-map>
-
+    <request-map uri="validateCreateCustomer">
+        <security https="true" auth="false"/>
+        <event type="java" path="org.apache.ofbiz.ecommerce.misc.ThirdPartyEvents" invoke="validateRecaptcha"/>
+        <response name="success" type="request" value="createcustomer"/>
+        <response name="error" type="view" value="newcustomer"/>
+    </request-map>
     <!-- ======================= Customer Profile Requests ======================= -->
 
     <request-map uri="viewprofile">

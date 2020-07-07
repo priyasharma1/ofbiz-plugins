@@ -38,6 +38,7 @@ under the License.
         <property name="VT_HDR_JAVASCRIPT['add']" value="/ecommerce/js/bootstrap/js/bootstrap-4.3.1.min.js"/>
         <property name="VT_HDR_JAVASCRIPT['add']" value="/ecommerce/js/bootstrap/js/bootstrap.bundle-4.3.1.min.js"/>
         <property name="VT_HDR_JAVASCRIPT['add']" value="/ecommerce/js/bsgdprcookies/jquery.bs.gdpr.cookies.min.js"/>
+        <property name="VT_HDR_JAVASCRIPT['add']" value="https://www.google.com/recaptcha/api.js"/>
 
         <!--Css style-->
         <property name="VT_STYLESHEET['add']" value="/ecommerce/js/bootstrap/css/bootstrap-4.3.1.min.css"/>

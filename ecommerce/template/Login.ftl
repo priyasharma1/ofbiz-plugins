@@ -18,6 +18,8 @@ under the License.
 -->
 <#assign janrainEnabled = Static["org.apache.ofbiz.entity.util.EntityUtilProperties"].getPropertyValue("ecommerce", "janrain.enabled", delegator)>
 <#assign appName = Static["org.apache.ofbiz.entity.util.EntityUtilProperties"].getPropertyValue("ecommerce", "janrain.appName", delegator)>
+<#assign recaptchaEnabled = Static["org.apache.ofbiz.entity.util.EntityUtilProperties"].getPropertyValue("ecommerce", "recaptcha.enabled", delegator)>
+<#assign siteKey = Static["org.apache.ofbiz.entity.util.EntityUtilProperties"].getPropertyValue("ecommerce", "google.recaptcha.site.key", delegator)!/>
 <#if "Y" == janrainEnabled>
 <script type="application/javascript">
 (function() {
@@ -87,7 +89,7 @@ under the License.
       <h3>${uiLabelMap.CommonRegistered}</h3>
     </div>
     <div class="card-block p-1 m-2">
-      <form method="post" action="<@ofbizUrl>login</@ofbizUrl>" name="loginform">
+      <form method="post" action="<@ofbizUrl><#if "Y" == recaptchaEnabled>validateAndLogin<#else>login</#if></@ofbizUrl>" name="loginform">
         <div class="form-group">
           <label for="userName">${uiLabelMap.CommonUsername}</label>
           <input type="text" class="form-control" id="userName" name="USERNAME" value="<#if requestParameters.USERNAME?has_content>${requestParameters.USERNAME}<#elseif autoUserLogin?has_content>${autoUserLogin.userLoginId}</#if>"/>
@@ -99,6 +101,9 @@ under the License.
           <label for="password">${uiLabelMap.CommonPassword}</label>
           <input type="password" class="form-control" id="password" name="PASSWORD" autocomplete="off" value=""/>
         </div>
+        <#if "Y" == recaptchaEnabled>
+          <div class="g-recaptcha mb-3" data-sitekey="${siteKey!}"></div>
+        </#if>
         <div class="form-group">
           <input type="submit" class="btn btn-primary btn-block " value="${uiLabelMap.CommonLogin}"/>
         </div>

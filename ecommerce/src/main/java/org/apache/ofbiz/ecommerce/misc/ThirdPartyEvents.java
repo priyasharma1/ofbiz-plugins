@@ -18,14 +18,21 @@
  *******************************************************************************/
 package org.apache.ofbiz.ecommerce.misc;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.ofbiz.base.conversion.ConversionException;
+import org.apache.ofbiz.base.conversion.JSONConverters;
+import org.apache.ofbiz.base.lang.JSON;
 import org.apache.ofbiz.base.util.Debug;
+import org.apache.ofbiz.base.util.HttpClient;
+import org.apache.ofbiz.base.util.HttpClientException;
 import org.apache.ofbiz.base.util.UtilDateTime;
 import org.apache.ofbiz.base.util.UtilHttp;
 import org.apache.ofbiz.base.util.UtilMisc;
@@ -35,6 +42,8 @@ import org.apache.ofbiz.entity.Delegator;
 import org.apache.ofbiz.entity.GenericEntityException;
 import org.apache.ofbiz.entity.GenericValue;
 import org.apache.ofbiz.entity.util.EntityUtil;
+import org.apache.ofbiz.entity.util.EntityUtilProperties;
+
 
 
 public class ThirdPartyEvents {
@@ -260,4 +269,46 @@ public class ThirdPartyEvents {
         return partyRelationship == null ? null : partyRelationship.getString("partyIdTo");
     }
 
+    public static String validateRecaptcha (HttpServletRequest request, HttpServletResponse response) {
+        Delegator delegator = (Delegator) request.getAttribute("delegator");
+        Locale locale = UtilHttp.getLocale(request);
+        String recaptchaEnabled = EntityUtilProperties.getPropertyValue("ecommerce", "recaptcha.enabled", delegator);
+        if ("Y".equals(recaptchaEnabled)) {
+            Map<String, Object> parameters = new HashMap<String, Object>();
+            String token = request.getParameter("g-recaptcha-response");
+            if (token == null) {
+                request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage("EcommerceUiLabels", "EcommerceRecaptchaMissing", locale));
+                return "error";
+            }
+            String secretKey = EntityUtilProperties.getPropertyValue("ecommerce", "google.recaptcha.secret.key", delegator);
+            parameters.put("secret", secretKey);
+            parameters.put("response", token);
+            String requestUrl = "https://www.google.com/recaptcha/api/siteverify";
+
+            Map<String, Object> jsonResponse = null;
+
+            HttpClient http = new HttpClient(requestUrl.toString(), parameters);
+            try {
+                http.setAllowUntrusted(true);
+                String httpResponse = http.post();
+                if (UtilValidate.isNotEmpty(httpResponse)) {
+                    JSON json = JSON.from(httpResponse);
+                    JSONConverters.JSONToMap jsonToMap = new JSONConverters.JSONToMap();
+                    jsonResponse = jsonToMap.convert(json);
+                    if ((Boolean) jsonResponse.get("success")) {
+                        return "success";
+                    } else {
+                        Debug.logError(httpResponse, MODULE);
+                        request.setAttribute("_ERROR_MESSAGE_", UtilProperties.getMessage("EcommerceUiLabels", "EcommerceRecaptchaInvalid", locale));
+                    }
+                }
+            } catch (HttpClientException hce) {
+                Debug.logError(hce, MODULE);
+            } catch (ConversionException ce) {
+                Debug.logError(ce, MODULE);
+            }
+            return "error";
+        }
+        return "success";
+    }
 }

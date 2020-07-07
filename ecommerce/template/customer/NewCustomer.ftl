@@ -16,6 +16,8 @@ KIND, either express or implied.  See the License for the
 specific language governing permissions and limitations
 under the License.
 -->
+<#assign recaptchaEnabled = Static["org.apache.ofbiz.entity.util.EntityUtilProperties"].getPropertyValue("ecommerce", "recaptcha.enabled", delegator)>
+<#assign siteKey = Static["org.apache.ofbiz.entity.util.EntityUtilProperties"].getPropertyValue("ecommerce", "google.recaptcha.site.key", delegator)!/>
 
 <#if getUsername>
 <script type="application/javascript">
@@ -107,7 +109,7 @@ will generally always be reserved for the logo at the top of the page.
 <div class="d-flex justify-content-center">
 <div class="card p-2 m-3">
 
-<form method="post" action="<@ofbizUrl>createcustomer${previousParams}</@ofbizUrl>" id="newuserform" name="newuserform">
+<form method="post" action="<@ofbizUrl><#if "Y" == recaptchaEnabled>validateCreateCustomer${previousParams}<#else>createcustomer${previousParams}</#if></@ofbizUrl>" id="newuserform" name="newuserform">
 
   <div class="card-block">
     ${uiLabelMap.CommonFieldsMarkedAreRequired}
@@ -423,9 +425,13 @@ will generally always be reserved for the logo at the top of the page.
               class="form-control form-control-sm" onfocus="clickUsername();" onchange="changeEmail();"/>
         </#if>
       </div>
+
       </div>
     </#if>
   </fieldset>
+  <#if "Y" == recaptchaEnabled>
+    <div class="g-recaptcha mb-3" data-sitekey="${siteKey!}"></div>
+  </#if>
   </div>
   <div class="col-6">
   <fieldset>

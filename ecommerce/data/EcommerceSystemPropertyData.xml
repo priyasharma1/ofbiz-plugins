@@ -40,6 +40,22 @@ under the License.
     description="Number of tags in the tag cloud." 
     systemResourceId="ecommerce"
     />
-    
 
+    <SystemProperty
+    description="Google Recaptcha site Key"
+    systemPropertyId="google.recaptcha.site.key"
+    systemPropertyValue="6LeyzK8UAAAAAPxAunXgFLthX5ssGso_cU-92G16"
+    systemResourceId="ecommerce"/>
+
+    <SystemProperty
+    description="Google Recaptcha secret Key"
+    systemPropertyId="google.recaptcha.secret.key"
+    systemPropertyValue="6LeyzK8UAAAAAN6SkwzuQ5oAfXQgIV_lVitO8CLg"
+    systemResourceId="ecommerce"/>
+
+    <SystemProperty
+    description="Google Enabled"
+    systemPropertyId="recaptcha.enabled"
+    systemPropertyValue="N"
+    systemResourceId="ecommerce"/>
 </entity-engine-xml>

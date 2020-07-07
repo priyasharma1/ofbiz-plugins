@@ -2968,6 +2968,12 @@
         <value xml:lang="zh">重新计算购物车</value>
         <value xml:lang="zh-TW">重新計算購物車</value>
     </property>
+    <property key="EcommerceRecaptchaCodeMissing">
+        <value xml:lang="en">Recaptcha Code Missing</value>
+    </property>
+    <property key="EcommerceRecaptchaInvalid">
+        <value xml:lang="en">Recaptcha Invalid</value>
+    </property>
     <property key="EcommerceRecurrence">
         <value xml:lang="da">Gentagelse</value>
         <value xml:lang="de">Wiederholung</value>
